@@ -1,21 +1,35 @@
+
 const express = require("express");
-const molrgan = require("morgan");
+const morgan = require("morgan");
 require("dotenv").config();
 
+const connectDB = require("./config/db");
+const expenseRoutes = require("./routes/expenseRoutes");
 const app = express();
 
+// Middleware
 app.use(express.json());
-app.use(molrgan("dev"));
+app.use(morgan("dev"));
+app.use("/api/expenses",expenseRoutes);
 
 
+
+// Test route
 app.get("/", (req, res) => {
-    res.status(200).json({
-        message: " API is Running"
-    })
-}
-)
+  res.status(200).json({
+    message: "Expense Tracker API is running",
+  });
+});
 
-const PORT = process.env.port || 3000;
-app.listen(PORT, () => {
-    console.log (`Server is running on port ${PORT}`);
-})
+// Start server
+const PORT = process.env.PORT || 3000;
+
+const startServer = async () => {
+  await connectDB();
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+startServer();
