@@ -87,5 +87,27 @@ router.patch("/:id", async (req, res) => {
 });
 
 
+router.delete("/:id", async (req, res) => {
+  try {
+    const expense = await Expense.findByIdAndDelete(req.params.id);
+
+    if (!expense) {
+      return res.status(404).json({
+        message: "Expense not Found",
+
+      });
+     }
+     res.status(200).json({
+      message: "Expense was deleted successfully",
+      expense : expense,
+      });
+     } catch (error) {
+      res.status(400).json({
+        message: "Failed to delete expense",
+        error : error.message,
+      });
+     }
+    });
+
 
 module.exports = router;
